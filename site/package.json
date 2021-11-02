@@ -4,10 +4,10 @@
   "description": "Docs and examples for Svelte",
   "type": "module",
   "scripts": {
-    "dev": "node scripts/update.js && npm run copy-workers && svelte-kit dev",
+    "dev": "npm run copy-workers && svelte-kit dev",
     "copy-workers": "node scripts/copy-workers.js",
     "migrate": "node-pg-migrate -r dotenv/config",
-    "build": "node scripts/update.js && npm run copy-workers && svelte-kit build",
+    "build": "npm run copy-workers && svelte-kit build",
     "update": "node scripts/update.js --force=true",
     "start": "node build",
     "test": "uvu test",

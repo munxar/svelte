@@ -1,10 +1,19 @@
 <script>
-	import { Section } from '@sveltejs/site-kit';
-	import IntersectionObserver from '../../components/IntersectionObserver.svelte';
-	import ReplWidget from '../../components/Repl/ReplWidget.svelte';
+	import { Section } from "@sveltejs/site-kit";
+	import ReplWidget from "../../components/Repl/ReplWidget.svelte";
 
 	export let id;
 </script>
+
+<Section>
+	<div class="example">
+		<slot />
+
+		<div class="repl-container">
+			<ReplWidget example={id} />
+		</div>
+	</div>
+</Section>
 
 <style>
 	.example {
@@ -35,18 +44,3 @@
 		}
 	}
 </style>
-
-<Section>
-	<div class="example">
-		<slot></slot>
-
-		<div class="repl-container">
-			<IntersectionObserver once let:intersecting top={400}>
-				{#if intersecting}
-					<!-- <Lazy this={loadReplWidget} example={id}/> -->
-					<ReplWidget example={id}/>
-				{/if}
-			</IntersectionObserver>
-		</div>
-	</div>
-</Section>
