@@ -1,27 +1,24 @@
 <script>
-	import { Blurb, Hero, Section } from "@sveltejs/site-kit";
+	import { Blurb, Section } from "@sveltejs/site-kit";
+	import Backdrop from "./_components/Backdrop.svelte";
 	import Example from "./_components/Example.svelte";
-	// import Lazy from '../components/Lazy.svelte';
-
-	// TODO this causes a Sapper CSS bug...
-	// function loadReplWidget() {
-	// 	console.log('lazy loading');
-	// 	return import('../components/Repl/ReplWidget.svelte').then(mod => mod.default);
-	// }
+	import Hero from "./_components/Hero.svelte";
 </script>
 
 <svelte:head>
-	<title>Svelte • Cybernetically enhanced web apps</title>
+	<title>LiipConf 2021 • Why Svelte is AWESOME</title>
 
 	<meta name="twitter:title" content="Svelte" />
 	<meta name="twitter:description" content="Cybernetically enhanced web apps" />
 	<meta name="Description" content="Cybernetically enhanced web apps" />
 </svelte:head>
 
+<Backdrop />
+
 <Hero
-	title="SVELTE"
+	title="LiipConf - 2021"
 	tagline="Why Svelte is AWESOME"
-	logotype="svelte-logotype.svg"
+	description="Sascha Aeppli | Developer @ TeamFusion.Liip.ZH.Suisse.Earth"
 />
 
 <Blurb>
@@ -79,6 +76,17 @@
 	</Example>
 </div>
 
+<div class="to-examples">
+	<div class="pills">
+		<a class="pill blue" href="https://reactjs.org">
+			<h2>Blue Pill</h2>
+		</a>
+		<a class="pill red" href="/examples#hello-world">
+			<h2>Red Pill</h2>
+		</a>
+	</div>
+</div>
+
 <style>
 	/* darken text for accessibility */
 	/* TODO does this belong elsewhere? */
@@ -90,5 +98,38 @@
 		background: var(--second);
 		color: white;
 		overflow: hidden;
+	}
+	.to-examples {
+		display: flex;
+		height: 100vh;
+		justify-content: center;
+		align-items: center;
+	}
+	.pills {
+		display: flex;
+	}
+
+	.pill {
+		padding: 1rem 3rem;
+		border-radius: 3rem;
+		margin: 1rem;
+		border: 4px solid black;
+		opacity: 80%;
+	}
+	.pill:hover {
+		opacity: 100%;
+		transition: transform linear 200ms;
+		transform: scale(1.1);
+	}
+	.pill h2 {
+		color: #f7f7f5;
+	}
+	.red {
+		background-color: #c02e00;
+		border-color: #d33301;
+	}
+	.blue {
+		background-color: #0d4bb1;
+		border-color: #195ccd;
 	}
 </style>

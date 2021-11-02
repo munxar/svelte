@@ -1,30 +1,30 @@
 <script context="module">
-	export function load({ page: { params, query }}) {
+	export function load({ page: { params, query } }) {
 		return {
 			props: {
-				version: query.get('version') || '3',
-				id: params.id
-			}
+				version: "local",
+				id: params.id,
+			},
 		};
 	}
 </script>
 
 <script>
-	import Repl from '@sveltejs/svelte-repl';
-	import { onMount } from 'svelte';
-	import { browser } from '$app/env';
-	import { goto } from '$app/navigation';
-	import { session } from '$app/stores';
-	import { mapbox_setup } from '../../../config';
-	import InputOutputToggle from '../../../components/Repl/InputOutputToggle.svelte';
-	import AppControls from './_components/AppControls/index.svelte';
+	import Repl from "@sveltejs/svelte-repl";
+	import { onMount } from "svelte";
+	import { browser } from "$app/env";
+	import { goto } from "$app/navigation";
+	import { session } from "$app/stores";
+	import { mapbox_setup } from "../../../config";
+	import InputOutputToggle from "../../../components/Repl/InputOutputToggle.svelte";
+	import AppControls from "./_components/AppControls/index.svelte";
 
 	export let version;
 	export let id;
 
 	let repl;
 	let gist;
-	let name = 'Loading...';
+	let name = "Loading...";
 	let zen_mode = false;
 	let is_relaxed_gist = false;
 	let width = browser ? window.innerWidth : 1000;
@@ -33,16 +33,15 @@
 	function update_query_string(version) {
 		const params = [];
 
-		if (version !== 'latest') params.push(`version=${version}`);
+		if (version !== "latest") params.push(`version=${version}`);
 
-		const url = params.length > 0
-			? `/repl/${id}?${params.join('&')}`
-			: `/repl/${id}`;
+		const url =
+			params.length > 0 ? `/repl/${id}?${params.join("&")}` : `/repl/${id}`;
 
-		history.replaceState({}, 'x', url);
+		history.replaceState({}, "x", url);
 	}
 
-	$: if (typeof history !== 'undefined') update_query_string(version);
+	$: if (typeof history !== "undefined") update_query_string(version);
 
 	function fetch_gist(id) {
 		if (gist && gist.uid === id) {
@@ -51,28 +50,28 @@
 		}
 
 		// TODO handle `relaxed` logic
-		fetch(`/repl/${id}.json`).then(r => {
+		fetch(`/repl/${id}.json`).then((r) => {
 			if (r.ok) {
-				r.json().then(data => {
+				r.json().then((data) => {
 					gist = data;
 					name = data.name;
 
 					is_relaxed_gist = data.relaxed;
 
-					const components = data.files.map(file => {
+					const components = data.files.map((file) => {
 						const dot = file.name.lastIndexOf(".");
 						let name = file.name.slice(0, dot);
 						let type = file.name.slice(dot + 1);
 
-						if (type === 'html') type = 'svelte'; // TODO do this on the server
+						if (type === "html") type = "svelte"; // TODO do this on the server
 						return { name, type, source: file.source };
 					});
 
 					components.sort((a, b) => {
-						if (a.name === 'App' && a.type === 'svelte') return -1;
-						if (b.name === 'App' && b.type === 'svelte') return 1;
+						if (a.name === "App" && a.type === "svelte") return -1;
+						if (b.name === "App" && b.type === "svelte") return 1;
 
-						if (a.type !== b.type) return a.type === 'svelte' ? -1 : 1;
+						if (a.type !== b.type) return a.type === "svelte" ? -1 : 1;
 
 						return a.name < b.name ? -1 : 1;
 					});
@@ -80,7 +79,7 @@
 					repl.set({ components });
 				});
 			} else {
-				console.warn('TODO: 404 Gist');
+				console.warn("TODO: 404 Gist");
 			}
 		});
 	}
@@ -88,31 +87,66 @@
 	$: if (browser) fetch_gist(id);
 
 	onMount(() => {
-		if (version !== 'local') {
-			fetch(`https://unpkg.com/svelte@${version || '3'}/package.json`)
-				.then(r => r.json())
-				.then(pkg => {
+		if (version !== "local") {
+			fetch(`https://unpkg.com/svelte@${version || "3"}/package.json`)
+				.then((r) => r.json())
+				.then((pkg) => {
 					version = pkg.version;
 				});
 		}
 	});
 
 	function handle_fork(event) {
-		console.log('> handle_fork', event);
+		console.log("> handle_fork", event);
 		gist = event.detail.gist;
 		goto(`/repl/${gist.uid}?version=${version}`);
 	}
 
-	$: svelteUrl = browser && version === 'local' ?
-		`${location.origin}/repl/local` :
-		`https://unpkg.com/svelte@${version}`;
+	$: svelteUrl =
+		browser && version === "local"
+			? `${location.origin}/repl/local`
+			: `https://unpkg.com/svelte@${version}`;
 
 	const rollupUrl = `https://unpkg.com/rollup@1/dist/rollup.browser.js`;
 
 	$: mobile = width < 540;
 
-	$: relaxed = is_relaxed_gist || ($session.user && gist && $session.user.uid === gist.owner);
+	$: relaxed =
+		is_relaxed_gist ||
+		($session.user && gist && $session.user.uid === gist.owner);
 </script>
+
+<svelte:head>
+	<title>{name} • REPL • Svelte</title>
+
+	<meta name="twitter:title" content="Svelte REPL" />
+	<meta name="twitter:description" content="Cybernetically enhanced web apps" />
+	<meta name="Description" content="Interactive Svelte playground" />
+</svelte:head>
+
+<svelte:window bind:innerWidth={width} />
+
+<div class="repl-outer {zen_mode ? 'zen-mode' : ''}" class:mobile>
+	<AppControls {gist} {repl} bind:name bind:zen_mode on:forked={handle_fork} />
+
+	{#if browser}
+		<div class="viewport" class:offset={checked}>
+			<Repl
+				bind:this={repl}
+				workersUrl="workers"
+				{svelteUrl}
+				{rollupUrl}
+				{relaxed}
+				fixed={mobile}
+				injectedJS={mapbox_setup}
+			/>
+		</div>
+
+		{#if mobile}
+			<InputOutputToggle bind:checked />
+		{/if}
+	{/if}
+</div>
 
 <style>
 	.repl-outer {
@@ -168,45 +202,11 @@
 	}
 
 	@keyframes fade-in {
-		0%   { opacity: 0 }
-		100% { opacity: 1 }
+		0% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
 	}
 </style>
-
-<svelte:head>
-	<title>{name} • REPL • Svelte</title>
-
-	<meta name="twitter:title" content="Svelte REPL">
-	<meta name="twitter:description" content="Cybernetically enhanced web apps">
-	<meta name="Description" content="Interactive Svelte playground">
-</svelte:head>
-
-<svelte:window bind:innerWidth={width}/>
-
-<div class="repl-outer {zen_mode ? 'zen-mode' : ''}" class:mobile>
-	<AppControls
-		{gist}
-		{repl}
-		bind:name
-		bind:zen_mode
-		on:forked={handle_fork}
-	/>
-
-	{#if browser}
-		<div class="viewport" class:offset={checked}>
-			<Repl
-				bind:this={repl}
-				workersUrl="workers"
-				{svelteUrl}
-				{rollupUrl}
-				{relaxed}
-				fixed={mobile}
-				injectedJS={mapbox_setup}
-			/>
-		</div>
-
-		{#if mobile}
-			<InputOutputToggle bind:checked/>
-		{/if}
-	{/if}
-</div>
