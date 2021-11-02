@@ -4,6 +4,31 @@
 	export let isLoading = false;
 </script>
 
+<ul class="examples-toc">
+	{#each sections as section}
+		<li>
+			<span class="section-title">{section.title}</span>
+
+			{#each section.examples as example}
+				<div
+					class="row"
+					class:active={example.slug === active_section}
+					class:loading={isLoading}
+				>
+					<a
+						href="examples#{example.slug}"
+						class="row"
+						class:active={example.slug === active_section}
+						class:loading={isLoading}
+					>
+						<span>{example.title}</span>
+					</a>
+				</div>
+			{/each}
+		</li>
+	{/each}
+</ul>
+
 <style>
 	.examples-toc {
 		overflow-y: auto;
@@ -32,7 +57,7 @@
 	div {
 		display: flex;
 		flex-direction: row;
-		padding: 0.2rem 3rem;
+		padding: 1rem 3rem;
 		margin: 0 -3rem;
 	}
 
@@ -83,34 +108,3 @@
 		margin: 0.2em 0.5em 0.2em 0;
 	}
 </style>
-
-<ul class="examples-toc">
-	{#each sections as section}
-		<li>
-			<span class="section-title">{section.title}</span>
-
-			{#each section.examples as example}
-				<div
-					class="row"
-					class:active={example.slug === active_section}
-					class:loading={isLoading}>
-					<a
-						href="examples#{example.slug}"
-						class="row"
-						class:active={example.slug === active_section}
-						class:loading={isLoading}>
-						<img
-							class="thumbnail"
-							alt="{example.title} thumbnail"
-							src="examples/thumbnails/{example.slug}.jpg" />
-
-						<span>{example.title}</span>
-					</a>
-					{#if example.slug === active_section}
-						<a href="repl/{example.slug}" class="repl-link">REPL</a>
-					{/if}
-				</div>
-			{/each}
-		</li>
-	{/each}
-</ul>
