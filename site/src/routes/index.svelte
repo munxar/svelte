@@ -3,6 +3,7 @@
 	import Backdrop from "./_components/Backdrop.svelte";
 	import Example from "./_components/Example.svelte";
 	import Hero from "./_components/Hero.svelte";
+	import { catchme } from "./_actions/catchme";
 </script>
 
 <svelte:head>
@@ -77,10 +78,11 @@
 </div>
 
 <div class="to-examples">
+	<button use:catchme class="pill blue" href="/">
+		<h2>Blue Pill</h2>
+	</button>
+
 	<div class="pills">
-		<a class="pill blue" href="https://reactjs.org">
-			<h2>Blue Pill</h2>
-		</a>
 		<a class="pill red" href="/examples#hello-world">
 			<h2>Red Pill</h2>
 		</a>
@@ -100,6 +102,7 @@
 		overflow: hidden;
 	}
 	.to-examples {
+		position: relative;
 		display: flex;
 		height: 100vh;
 		justify-content: center;
@@ -108,8 +111,9 @@
 	.pills {
 		display: flex;
 	}
-
 	.pill {
+		display: block;
+		position: absolute;
 		padding: 1rem 3rem;
 		border-radius: 3rem;
 		margin: 1rem;
