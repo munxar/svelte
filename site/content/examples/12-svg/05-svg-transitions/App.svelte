@@ -30,20 +30,10 @@
 	toggle me
 </label>
 
-<link
-	href="https://fonts.googleapis.com/css?family=Overpass:100,400"
-	rel="stylesheet"
-/>
-
 <style>
 	svg {
 		width: 100%;
 		height: 100%;
-	}
-
-	path {
-		fill: white;
-		opacity: 1;
 	}
 
 	label {

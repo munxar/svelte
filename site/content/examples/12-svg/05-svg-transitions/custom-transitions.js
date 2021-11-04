@@ -1,7 +1,7 @@
-import { cubicIn } from "svelte/easing";
+import { bounceOut } from "svelte/easing";
 
 export function expand(node, params) {
-	const { delay = 0, duration = 400, easing = cubicIn } = params;
+	const { delay = 0, duration = 400, easing = bounceOut } = params;
 
 	const w = parseFloat(getComputedStyle(node).strokeWidth);
 
@@ -9,6 +9,6 @@ export function expand(node, params) {
 		delay,
 		duration,
 		easing,
-		css: (t) => `stroke-width: ${t * w}`,
+		css: (t) => `stroke-width: ${t * w}; stroke: hsl(20, ${t * 100}%, 45%)`,
 	};
 }
