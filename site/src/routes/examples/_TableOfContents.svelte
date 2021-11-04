@@ -50,27 +50,37 @@
 	};
 </script>
 
-<svelte:window on:keydown={keydown} />
-
 <nav>
 	<div class="title">
 		{example.section?.title} / {example.title}
 	</div>
 	<div class="pager">
-		<input
-			min="1"
-			max={examples.length}
-			type="number"
-			value={index + 1}
-			on:input={(e) => toPage(e.target.value - 1)}
-		/>
-		/ {examples.length}
+		<button on:click={prev}>‹</button>
+		<div>
+			<input
+				min="1"
+				max={examples.length}
+				type="number"
+				value={index + 1}
+				on:input={(e) => toPage(e.target.value - 1)}
+			/>
+			/ {examples.length}
+		</div>
+		<button class="right-btn" on:click={next}>›</button>
 	</div>
+	<div class="spacer"></div>
 </nav>
 
 <style>
+	.right-btn {
+		padding-left: 1rem;
+	}
+	.spacer {
+		flex: 1;
+	}
 	nav {
 		display: flex;
+		
 	}
 	.title {
 		flex: 1;
@@ -78,6 +88,7 @@
 	}
 	.pager {
 		padding-right: 1rem;
+		display: flex;
 	}
 	input::-webkit-inner-spin-button {
 		-webkit-appearance: none;
@@ -87,7 +98,9 @@
 		border: none;
 		outline: none;
 		text-align: right;
-		width: 3rem;
+		width: 2.1rem;
+		margin-left: 0.5rem;
+		margin-right: 0.5rem;
 		color: var(--text);
 		font-family: var(--font);
 		font-size: inherit;
