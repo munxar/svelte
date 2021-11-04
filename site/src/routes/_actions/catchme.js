@@ -5,7 +5,7 @@ export function catchme(node) {
 	const offsetY = 68;
 
 	let coords = spring(
-		{ x: window.innerWidth / 2 - offsetX, y: window.innerHeight / 2 },
+		{ x: window.innerWidth / 2 - offsetX - 10, y: window.innerHeight / 2 },
 		{
 			stiffness: 0.1,
 			damping: 0.25,

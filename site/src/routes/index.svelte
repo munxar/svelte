@@ -4,6 +4,7 @@
 	import Example from "./_components/Example.svelte";
 	import Hero from "./_components/Hero.svelte";
 	import { catchme } from "./_actions/catchme";
+	
 </script>
 
 <svelte:head>
@@ -19,18 +20,21 @@
 <Hero
 	title="LiipConf - 2021"
 	tagline="Why Svelte is AWESOME"
-	description="Sascha Aeppli | Developer @ TeamFusion.Liip.ZH.Suisse.Earth"
+	description="Sascha Aeppli"
+	sub="Developer @ TeamFusion.Liip.ZH.Switzerland.Earth"
 />
 
 <Blurb>
-	<a href="blog/write-less-code" slot="one">
-		<h2>Write less code</h2>
+	
+	<a href="blog/write-less-code" slot="one">		
+		<h2>Write less code</h2>		
+		
 		<p>
 			Build boilerplate-free components using languages you already know — HTML,
 			CSS and JavaScript
-		</p>
+		</p>		
 	</a>
-
+	
 	<a href="blog/virtual-dom-is-pure-overhead" slot="two">
 		<h2>No virtual DOM</h2>
 		<p>

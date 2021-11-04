@@ -2,13 +2,20 @@
 	export let title;
 	export let tagline;
 	export let description;
+	export let sub;	
 </script>
 
 <section class="hero">
+	
 	<h1 class="logotype">{title}</h1>
+	
 	<h2>{tagline}</h2>
-	<h3>{description}</h3>
-</section>
+	
+	<h3>{description}</h3>	
+	
+	<h3>{sub}</h3>
+	
+</section>	
 
 <style>
 	.hero {
@@ -54,7 +61,7 @@
 		}
 
 		.hero h3,
-		.hero h2,
+		.hero h2,		
 		.logotype {
 			left: 3rem;
 		}
