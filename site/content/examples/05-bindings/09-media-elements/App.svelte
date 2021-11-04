@@ -49,13 +49,12 @@
 	}
 </script>
 
-<h1>Caminandes: Llamigos</h1>
-<p>From <a href="https://cloud.blender.org/open-projects">Blender Open Projects</a>. CC-BY</p>
+<h1>Liip</h1>
 
 <div>
 	<video
-		poster="https://sveltejs.github.io/assets/caminandes-llamigos.jpg"
-		src="https://sveltejs.github.io/assets/caminandes-llamigos.mp4"
+		
+		src="https://liip.rokka.io/dynamic/22dcd5/loop.mp4"
 		on:mousemove={handleMove}
 		on:touchmove|preventDefault={handleMove}
 		on:mousedown={handleMousedown}

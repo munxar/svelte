@@ -9,6 +9,6 @@ export function expand(node, params) {
 		delay,
 		duration,
 		easing,
-		css: (t) => `stroke-width: ${t * w}; stroke: hsl(20, ${t * 100}%, 45%)`,
+		css: (t) => `stroke-width: ${t * w}; stroke: hsl(94, ${t * 42}%, 46%)`,
 	};
 }

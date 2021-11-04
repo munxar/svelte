@@ -6,6 +6,11 @@
 	export let isLoading = false;
 
 	$: examples = sections.reduce((arr, s) => {
+		s.examples = s.examples.map((e) => {
+			e.section = s;
+
+			return e;
+		});
 		return arr.concat(s.examples);
 	}, []);
 	$: example = examples.find((e) => e.slug === active_section) || {};
@@ -49,22 +54,9 @@
 
 <nav>
 	<div class="title">
-		{example.title}
+		{example.section?.title} / {example.title}
 	</div>
-	<div>
-		<button on:click={prev} href={prevLink}>
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				width="12"
-				height="12"
-				viewBox="0 0 24 24"
-				fill="currentColor"
-			>
-				<path
-					d="M6.3 12 18.8.9c.2-.2.2-.5 0-.7-.2-.2-.5-.2-.7 0l-13 11.5s-.1.2-.1.3.1.3.2.4l13 11.5c.1.1.2.1.3.1.1 0 .3-.1.4-.2.2-.2.2-.5 0-.7L6.3 12z"
-				/>
-			</svg>
-		</button>
+	<div class="pager">
 		<input
 			min="1"
 			max={examples.length}
@@ -73,21 +65,6 @@
 			on:input={(e) => toPage(e.target.value - 1)}
 		/>
 		/ {examples.length}
-
-		<button on:click={next} href={nextLink}>
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				width="12"
-				height="12"
-				viewBox="0 0 24 24"
-				fill="currentColor"
-			>
-				<path
-					xmlns="http://www.w3.org/2000/svg"
-					d="M18.8 11.6 5.8.1c-.2-.2-.5-.1-.7.1-.2.2-.1.5.1.7L17.7 12 5.2 23.1c-.2.2-.2.5 0 .7 0 .1.2.2.3.2.1 0 .2 0 .3-.1l13-11.5c.1-.1.2-.2.2-.4s-.1-.3-.2-.4z"
-				/>
-			</svg>
-		</button>
 	</div>
 </nav>
 
@@ -99,11 +76,8 @@
 		flex: 1;
 		padding-left: 1rem;
 	}
-	button {
-		height: 12px;
-		color: var(--prime);
-		padding: 0;
-		margin: 0;
+	.pager {
+		padding-right: 1rem;
 	}
 	input::-webkit-inner-spin-button {
 		-webkit-appearance: none;
