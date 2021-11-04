@@ -1,110 +1,124 @@
 <script>
+	import { page } from "$app/stores";
+	import { goto } from "$app/navigation";
 	export let sections = [];
 	export let active_section = null;
 	export let isLoading = false;
+
+	$: examples = sections.reduce((arr, s) => {
+		return arr.concat(s.examples);
+	}, []);
+	$: example = examples.find((e) => e.slug === active_section) || {};
+	$: index = examples.indexOf(example);
+	$: hasPrev = index > 0;
+	$: hasNext = index < examples.length - 1;
+	$: nextLink = `${$page.path}#${examples[index + 1]?.slug}`;
+	$: prevLink = `${$page.path}#${examples[index - 1]?.slug}`;
+
+	function toPage(index) {
+		if (index >= 0 && index < examples.length) {
+			location.hash = examples[index].slug;
+		}
+	}
+
+	function prev() {
+		if (hasPrev) {
+			toPage(index - 1);
+		}
+	}
+
+	function next() {
+		if (hasNext) {
+			toPage(index + 1);
+		}
+	}
+
+	const keydown = (e) => {
+		if (e.altKey && e.shiftKey) {
+			if (e.code === "ArrowLeft" && hasPrev) {
+				prev();
+			}
+			if (e.code === "ArrowRight" && hasNext) {
+				next();
+			}
+		}
+	};
 </script>
 
-<ul class="examples-toc">
-	{#each sections as section}
-		<li>
-			<span class="section-title">{section.title}</span>
+<svelte:window on:keydown={keydown} />
 
-			{#each section.examples as example}
-				<div
-					class="row"
-					class:active={example.slug === active_section}
-					class:loading={isLoading}
-				>
-					<a
-						href="examples#{example.slug}"
-						class="row"
-						class:active={example.slug === active_section}
-						class:loading={isLoading}
-					>
-						<span>{example.title}</span>
-					</a>
-				</div>
-			{/each}
-		</li>
-	{/each}
-</ul>
+<nav>
+	<div class="title">
+		{example.title}
+	</div>
+	<div>
+		<button on:click={prev} href={prevLink}>
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				width="12"
+				height="12"
+				viewBox="0 0 24 24"
+				fill="currentColor"
+			>
+				<path
+					d="M6.3 12 18.8.9c.2-.2.2-.5 0-.7-.2-.2-.5-.2-.7 0l-13 11.5s-.1.2-.1.3.1.3.2.4l13 11.5c.1.1.2.1.3.1.1 0 .3-.1.4-.2.2-.2.2-.5 0-.7L6.3 12z"
+				/>
+			</svg>
+		</button>
+		<input
+			min="1"
+			max={examples.length}
+			type="number"
+			value={index + 1}
+			on:input={(e) => toPage(e.target.value - 1)}
+		/>
+		/ {examples.length}
+
+		<button on:click={next} href={nextLink}>
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				width="12"
+				height="12"
+				viewBox="0 0 24 24"
+				fill="currentColor"
+			>
+				<path
+					xmlns="http://www.w3.org/2000/svg"
+					d="M18.8 11.6 5.8.1c-.2-.2-.5-.1-.7.1-.2.2-.1.5.1.7L17.7 12 5.2 23.1c-.2.2-.2.5 0 .7 0 .1.2.2.3.2.1 0 .2 0 .3-.1l13-11.5c.1-.1.2-.2.2-.4s-.1-.3-.2-.4z"
+				/>
+			</svg>
+		</button>
+	</div>
+</nav>
 
 <style>
-	.examples-toc {
-		overflow-y: auto;
-		height: 100%;
-		border-right: 1px solid var(--second);
-		background-color: var(--second);
-		color: white;
-		padding: 3rem 3rem 0 3rem;
-	}
-
-	.examples-toc li {
-		display: block;
-		line-height: 1.2;
-		margin: 0 0 4.8rem 0;
-	}
-
-	.section-title {
-		display: block;
-		padding: 0 0 0.8rem 0;
-		font: 400 var(--h6) var(--font);
-		text-transform: uppercase;
-		letter-spacing: 0.12em;
-		font-weight: 700;
-	}
-
-	div {
+	nav {
 		display: flex;
-		flex-direction: row;
-		padding: 1rem 3rem;
-		margin: 0 -3rem;
 	}
-
-	div.active {
-		background: rgba(0, 0, 0, 0.15) calc(100% - 3rem) 47% no-repeat
-			url(/icons/arrow-right.svg);
-		background-size: 1em 1em;
-		color: white;
+	.title {
+		flex: 1;
+		padding-left: 1rem;
 	}
-
-	div.active.loading {
-		background: rgba(0, 0, 0, 0.1) calc(100% - 3rem) 47% no-repeat
-			url(/icons/loading.svg);
-		background-size: 1em 1em;
-		color: white;
-	}
-
-	a {
-		display: flex;
-		flex: 1 1 auto;
-		position: relative;
-		color: var(--sidebar-text);
-		border-bottom: none;
-		font-size: 1.6rem;
-		align-items: center;
-		justify-content: start;
+	button {
+		height: 12px;
+		color: var(--prime);
 		padding: 0;
+		margin: 0;
 	}
-
-	a:hover {
-		color: white;
+	input::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
 	}
-
-	.repl-link {
-		flex: 0 1 auto;
-		font-size: 1.2rem;
-		font-weight: 700;
-		margin-right: 2.5rem;
+	input {
+		border: none;
+		outline: none;
+		text-align: right;
+		width: 3rem;
+		color: var(--text);
+		font-family: var(--font);
+		font-size: inherit;
 	}
-
-	.thumbnail {
-		background-color: white;
-		object-fit: contain;
-		width: 5rem;
-		height: 5rem;
-		border-radius: 2px;
-		box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.13);
-		margin: 0.2em 0.5em 0.2em 0;
+	button:hover {
+		color: black;
 	}
 </style>
